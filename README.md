@@ -14,6 +14,6 @@
 自救
 ![image](./preview/image1.gif)
 互救
-![image](./preview/image2.png)
+![image](./preview/image2.gif)
 特感控制自救
-![image](./preview/image3.png)
+![image](./preview/image3.gif)
