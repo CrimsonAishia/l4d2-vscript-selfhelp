@@ -1,6 +1,14 @@
 IncludeScript("VSLib");
 IncludeScript("Common");
 
+::SelfHelpList <- {};
+// 药品自救时间 单位秒
+::SelfHelpDrugTime <- 3;
+// 互救时间 单位秒
+::SelfHelpOtherTime <- 5;
+
+
+
 /**
  * 随机颜色
  */
@@ -59,10 +67,6 @@ function VSLib::Player::CreateOrEditHint(hint, text, duration = 5, icon = "icon_
 
     return hint;
 }
-
-::SelfHelpList <- {};
-::SelfHelpDrugTime <- 3;
-::SelfHelpOtherTime <- 5;
 
 //无行动能力检测
 function Notifications::OnIncapacitated::SelfHelp_Incapacitated(victim,attacker,params)
@@ -257,7 +261,9 @@ function EasyLogic::Notifications::OnChargerPummelEnd::SelfHelp_ChargerPummelEnd
 
 					if(params.helpOtherTime >= SelfHelpOtherTime) {
 						local reviveCount = params.helpOther.GetReviveCount();
+                        // 互救成功血量设置为2 虚血设置为28
 						ReviveClientWithPills(params.helpOther,2,28);
+                        // 互救成功减少一次倒地次数
 						params.helpOther.SetReviveCount(reviveCount + 1);
 
                         params.helpOther.CreateOrEditHint(null, player.GetName() + " 蓄力一脚把你踹了起来！ ", 4);
@@ -345,14 +351,18 @@ function EasyLogic::Notifications::OnChargerPummelEnd::SelfHelp_ChargerPummelEnd
 		player.DropWeaponSlot(4);
 
 		local reviveNum = player.GetReviveCount();
+        // 止痛药 肾上腺素自救成功 血量设置为10 虚血30
 		ReviveClientWithPills(player,10,30);
+        // 药品自救不算倒地次数
 		player.SetReviveCount(reviveNum);
 	} else if("slot3" in item && item.slot3.GetClassname() == "weapon_first_aid_kit") {
         player.CreateOrEditHint(null, "自救成功(消耗了" + EntityAndPropByName(item.slot3) + ")");
 		player.DropWeaponSlot(3);
 
 		local reviveNum = player.GetReviveCount();
+        // 医疗包自救成功 血量设置为40 虚血30
 		ReviveClientWithPills(player,40,30);
+        // 药品自救不算倒地次数
 		player.SetReviveCount(reviveNum);
 	}
 }
